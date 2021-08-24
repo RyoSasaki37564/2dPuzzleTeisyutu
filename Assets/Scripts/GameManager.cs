@@ -30,7 +30,7 @@ public class GameManager : MonoBehaviour
         GameOut,  //ゲーム外状態。ゲームセットとゲームスタートの橋渡し役。
     }
 
-    public　static Turn m_turn; //ターン識別
+    public static Turn m_turn; //ターン識別
 
     // Start is called before the first frame update
     void Start()
@@ -64,7 +64,6 @@ public class GameManager : MonoBehaviour
     IEnumerator GameSetter()
     {
         yield return new WaitForSeconds(m_playTime);
-        m_turn = Turn.EnemyTurn;
         m_gameStateText.text = "そこまで！";
         m_finishSE.PlayOneShot(m_finishSE.clip);
     }
