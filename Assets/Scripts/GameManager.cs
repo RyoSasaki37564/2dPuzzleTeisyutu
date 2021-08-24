@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     [SerializeField]
-    private float m_playTime = 60.0f; //操作時間のもと
+    private float m_playTime = 20.0f; //操作時間のもと
     private int m_tachableTime; //実際の操作可能時間
 
     [SerializeField]
@@ -15,19 +15,30 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private Text m_timerText; //残り時間表示
 
-    public static bool m_gameSetFlg = false; //ゲームの終わりに振るフラグ。このフラグが立つと操作が無効になる
-
     [SerializeField]
     private AudioSource m_finishSE;
+
+    public static bool m_gameSetFlag = false;
+
+    public enum Turn //ターン制御
+    {
+        InputTurn, //入力待ち
+        PlayerTurn, //入力中ターン
+        EnemyTurn, //敵の攻撃
+        ResetTurn,  //仕切り直し
+        NextBattleTurn, //次の戦闘の受け取りターン
+        GameOut,  //ゲーム外状態。ゲームセットとゲームスタートの橋渡し役。
+    }
+
+    public　static Turn m_turn; //ターン識別
 
     // Start is called before the first frame update
     void Start()
     {
-        m_gameSetFlg = false;
+        //初期化
+        m_turn = Turn.InputTurn;
         m_gameStateText.text = "はじめい！";
         StartCoroutine(TextResetter());
-        StartCoroutine(GameSetter());
-        StartCoroutine(ResultTimer());
         m_tachableTime = (int)m_playTime;
         m_timerText.text = m_tachableTime.ToString();
         m_finishSE = GetComponent<AudioSource>();
@@ -53,13 +64,13 @@ public class GameManager : MonoBehaviour
     IEnumerator GameSetter()
     {
         yield return new WaitForSeconds(m_playTime);
-        m_gameSetFlg = true;
+        m_turn = Turn.EnemyTurn;
         m_gameStateText.text = "そこまで！";
         m_finishSE.PlayOneShot(m_finishSE.clip);
     }
     IEnumerator ResultTimer()
     {
-        yield return new WaitForSeconds(m_playTime + 2.0f);
+        yield return new WaitForSeconds(2.0f);
         SceneManager.LoadScene("Title");//今はタイトルに飛ばす。リザルトができ次第そちらに。
     }
 }

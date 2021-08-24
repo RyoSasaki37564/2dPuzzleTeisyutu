@@ -32,13 +32,17 @@ public class Bird : MonoBehaviour
 
     AudioSource shimatuSE;
 
+    public static bool m_miniAttackFlag = false;
+    public static bool m_nomalAttackFlag = false;
+    public static bool m_bigAttackFlag = false;
+
     // Start is called before the first frame update
     void Start()
     {
         scorePoint = 0;
         shimatuSE = GetComponent<AudioSource>();
 
-        if (GameManager.m_gameSetFlg == false)
+        if (GameManager.m_turn == GameManager.Turn.InputTurn || GameManager.m_turn == GameManager.Turn.PlayerTurn)
         {
 
             TouchManager.Began += (info) =>
@@ -101,30 +105,37 @@ public class Bird : MonoBehaviour
                         if (count == MinChain)
                         {
                             scorePoint += 100;
+                            m_miniAttackFlag = true;
                         }
                         else if (count == MinChain + 1)
                         {
                             scorePoint += 120;
+                            m_miniAttackFlag = true;
                         }
                         else if (count == MinChain + 2)
                         {
                             scorePoint += 150;
+                            m_nomalAttackFlag = true;
                         }
                         else if (count == MinChain + 3)
                         {
                             scorePoint += 180;
+                            m_nomalAttackFlag = true;
                         }
                         else if (count == MinChain + 4)
                         {
                             scorePoint += 220;
+                            m_nomalAttackFlag = true;
                         }
                         else if (count >= MinChain + 5)
                         {
                             scorePoint += 260;
+                            m_nomalAttackFlag = true;
                         }
                         else if (count >= MinChain + 7)
                         {
                             scorePoint += 300;
+                            m_bigAttackFlag = true;
                         }
                         Destroy(obj);
                         shimatuSE.PlayOneShot(shimatuSE.clip);
